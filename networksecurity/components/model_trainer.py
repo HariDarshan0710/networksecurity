@@ -27,13 +27,10 @@ import mlflow
 from urllib.parse import urlparse
 
 import dagshub
-#dagshub.init(repo_owner='krishnaik06', repo_name='networksecurity', mlflow=True)
-
-os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/krishnaik06/networksecurity.mlflow"
-os.environ["MLFLOW_TRACKING_USERNAME"]="krishnaik06"
-os.environ["MLFLOW_TRACKING_PASSWORD"]="7104284f1bb44ece21e0e2adb4e36a250ae3251f"
-
-
+dagshub.init(repo_owner='HariDarshan0710', repo_name='networksecurity', mlflow=True)
+os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/HariDarshan0710/networksecurity.mlflow"
+# os.environ["MLFLOW_TRACKING_USERNAME"]="krishnaik06"
+# os.environ["MLFLOW_TRACKING_PASSWORD"]="7104284f1bb44ece21e0e2adb4e36a250ae3251f"
 
 
 
@@ -46,7 +43,9 @@ class ModelTrainer:
             raise NetworkSecurityException(e,sys)
         
     def track_mlflow(self,best_model,classificationmetric):
-        mlflow.set_registry_uri("https://dagshub.com/krishnaik06/networksecurity.mlflow")
+        
+        mlflow.set_registry_uri("https://dagshub.com/HariDarshan0710/networksecurity.mlflow")
+        mlflow.set_experiment("networksecurity")
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
         with mlflow.start_run():
             f1_score=classificationmetric.f1_score
@@ -66,9 +65,16 @@ class ModelTrainer:
                 # There are other ways to use the Model Registry, which depends on the use case,
                 # please refer to the doc for more information:
                 # https://mlflow.org/docs/latest/model-registry.html#api-workflow
-                mlflow.sklearn.log_model(best_model, "model", registered_model_name=best_model)
+                # mlflow.sklearn.log_model(best_model, "model", registered_model_name=best_model)
+                mlflow.sklearn.log_model(
+                                        sk_model=best_model,
+                                        artifact_path="model",
+                                        registered_model_name="networksecurity_model"   # any string name you want
+                                        )
             else:
                 mlflow.sklearn.log_model(best_model, "model")
+                
+
 
 
         
@@ -152,12 +158,6 @@ class ModelTrainer:
         return model_trainer_artifact
 
 
-        
-
-
-       
-    
-    
         
     def initiate_model_trainer(self)->ModelTrainerArtifact:
         try:
